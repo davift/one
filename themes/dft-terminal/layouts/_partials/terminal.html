@@ -1,0 +1,41 @@
+{{- /*
+  Renders one terminal window. Context: a map with
+    title    text in the toolbar
+    command  optional command echoed by a prompt at the top
+    content  optional HTML printed as the command's output
+    pages    optional pages listed (as links) after the content
+    page     the page being rendered (needed for "pages")
+    prompt   true to end with an empty prompt and a blinking cursor
+*/ -}}
+<article class="Terminal">
+        <div class="Terminal__Toolbar">
+          <div class="Toolbar__buttons" aria-hidden="true">
+            <span class="Toolbar__button Toolbar__button--exit">&#10005;</span>
+            <span class="Toolbar__button">&#9472;</span>
+            <span class="Toolbar__button">&#9723;</span>
+          </div>
+          <h2 class="Toolbar__user">{{ .title }}</h2>
+        </div>
+        <div class="Terminal__body">
+          {{- with .command }}
+          {{ partial "prompt.html" . }}
+          {{- end }}
+          {{- if or .content .pages }}
+          <div class="Terminal__output">
+            {{- with .content }}
+            {{ . }}
+            {{- end }}
+            {{- with .pages }}
+            <ul>
+              {{- range . }}
+              <li><a href="{{ partial "relurl.html" (dict "page" $.page "url" .RelPermalink) }}">{{ .LinkTitle }}</a></li>
+              {{- end }}
+            </ul>
+            {{- end }}
+          </div>
+          {{- end }}
+          {{- if .prompt }}
+          {{ partial "prompt.html" "" }}
+          {{- end }}
+        </div>
+      </article>

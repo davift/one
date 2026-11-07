@@ -1,0 +1,4 @@
+{{- $base := (urls.Parse site.BaseURL).Path | default "/" }}
+{{- $here := strings.TrimPrefix $base (.page.RelPermalink | default $base) }}
+{{- $up := strings.Repeat (strings.Count "/" $here) "../" | default "./" }}
+{{- return (printf "%s%s" $up (strings.TrimPrefix $base .url)) }}

@@ -1,0 +1,14 @@
+# Defaults for the dft-terminal theme. Override any of them in the site's hugo.toml.
+
+[module.hugoVersion]
+  min = '0.158.0'
+
+[params]
+  # The windows are a fixed 520px wide, so phones lay the page out 580px wide
+  # and zoom out instead of squeezing the terminals.
+  viewport = 'width=580, initial-scale=0.7'
+
+[params.terminal]
+  # title = ''        # Toolbar prefix, "<title> - About" (default: the site title)
+  user = 'user@host'  # Prompt: user@host:~$
+  path = '~'

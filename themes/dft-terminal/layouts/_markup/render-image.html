@@ -1,0 +1,23 @@
+{{- /*
+  Resolves the image from the page bundle, then from assets/, and adds its
+  width and height so the page doesn't shift while it loads.
+*/ -}}
+{{- $src := .Destination }}
+{{- $width := 0 }}
+{{- $height := 0 }}
+{{- $u := urls.Parse .Destination }}
+{{- if not $u.IsAbs }}
+  {{- $path := strings.TrimPrefix "./" $u.Path }}
+  {{- with or (.PageInner.Resources.Get $path) (resources.Get $path) }}
+    {{- $src = partial "relurl.html" (dict "page" $.Page "url" .RelPermalink) }}
+    {{- if and (eq .MediaType.MainType "image") (not (strings.Contains .MediaType.SubType "svg")) }}
+      {{- $width = .Width }}
+      {{- $height = .Height }}
+    {{- end }}
+  {{- end }}
+{{- end -}}
+<img src="{{ $src }}" alt="{{ .PlainText }}"
+  {{- with .Title }} title="{{ . }}"{{ end }}
+  {{- with $width }} width="{{ . }}"{{ end }}
+  {{- with $height }} height="{{ . }}"{{ end }} loading="lazy" decoding="async">
+{{- /**/ -}}

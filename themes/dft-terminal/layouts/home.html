@@ -1,0 +1,29 @@
+{{ define "main" }}
+  {{- with site.GetPage "/terminals" }}
+    {{- /*
+      Each page in the "terminals" section is a window. Windows with the same
+      "card" id (default: the file name) are stacked in one card, and cards
+      follow the weight order of their first window.
+    */}}
+    {{- $s := newScratch }}
+    {{- range .RegularPages.ByWeight }}
+      {{- $id := .Params.card | default .File.ContentBaseName | anchorize }}
+      {{- $key := printf "card-%s" $id }}
+      {{- if not ($s.Get $key) }}
+        {{- $s.Add "ids" (slice $id) }}
+      {{- end }}
+      {{- $s.Add $key (slice .) }}
+    {{- end }}
+    {{- range $s.Get "ids" }}
+    <section class="card" id="{{ . }}">
+      {{- range $s.Get (printf "card-%s" .) }}
+      {{ partial "terminal-page.html" . }}
+      {{- end }}
+    </section>
+    {{- end }}
+  {{- else }}
+    <section class="card" id="top">
+      {{ partial "terminal-page.html" . }}
+    </section>
+  {{- end }}
+{{ end }}

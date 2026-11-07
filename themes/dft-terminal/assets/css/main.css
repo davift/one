@@ -1,0 +1,356 @@
+/*
+ * dft-terminal: Ubuntu-style terminal windows on a dark gradient.
+ *
+ * Window content (.Terminal__output) is ordinary Markdown output styled to
+ * read like terminal text: one blank line between blocks, text bullets for
+ * lists, and code fences printed as typed (used for the ASCII art).
+ */
+
+:root {
+  --accent: #f36f42;        /* terminal text, logo, menu hover */
+  --accent-alt: #4c9e9e;    /* dropdown item hover */
+  --terminal-bg: #020202;
+  --terminal-width: 520px;
+  --prompt-user: #87d441;
+  --prompt-location: #6d85a9;
+  --prompt-dollar: #ddd;
+  --font: 'Ubuntu', sans-serif;
+  --font-mono: 'Ubuntu Mono', monospace;
+}
+
+/* Base ------------------------------------------------------------------ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+a {
+  text-decoration: none;
+}
+
+li {
+  list-style: none;
+}
+
+body {
+  background: linear-gradient(45deg, #000 0%, #555 100%);
+  background-attachment: fixed;
+  font-family: var(--font);
+}
+
+/* Header and footer ----------------------------------------------------- */
+
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  background-color: #000;
+  color: #fff;
+}
+
+.nav-links a {
+  color: #fff;
+}
+
+.navbar .logo {
+  color: var(--accent);
+  font-size: 32px;
+}
+
+.logo span {
+  color: #fff;
+}
+
+.menu {
+  display: flex;
+  gap: 1em;
+  font-size: 18px;
+}
+
+.menu li {
+  padding: 5px 14px;
+}
+
+.menu li:hover {
+  background-color: var(--accent);
+  border-radius: 5px;
+  transition: 0.3s ease;
+}
+
+/* Keep the accent-colored part of a logo readable on the hover background. */
+.menu li:hover .logo {
+  color: #fff;
+}
+
+.has-dropdown {
+  position: relative;
+}
+
+.dropdown {
+  background-color: var(--accent);
+  padding: 1em 0;
+  position: absolute;
+  display: none;
+  border-radius: 8px;
+  top: 35px;
+}
+
+.dropdown li + li {
+  margin-top: 10px;
+}
+
+.dropdown li {
+  padding: 0.5em 1em;
+  width: 8em;
+  text-align: center;
+}
+
+.dropdown li:hover {
+  background-color: var(--accent-alt);
+}
+
+.has-dropdown:hover .dropdown,
+.has-dropdown:focus-within .dropdown {
+  display: block;
+}
+
+/* Cards: one column, two from 1200px ------------------------------------ */
+
+.cards {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+}
+
+@media (min-width: 1200px) {
+  .cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* A page with a single card (404, extra pages) centers it. */
+.cards:has(> .card:only-child) {
+  grid-template-columns: 1fr;
+}
+
+.card {
+  color: #fff;
+  padding: 15px 0;
+}
+
+/* Terminal window ------------------------------------------------------- */
+
+.Terminal {
+  width: var(--terminal-width);
+  margin: 0 auto;
+  box-shadow: 2px 4px 10px rgba(0, 0, 0, .5);
+}
+
+/* Windows stacked in the same card are one text line apart. */
+.Terminal + .Terminal {
+  margin-top: 1.15em;
+  margin-top: 1lh;
+}
+
+.Terminal__Toolbar {
+  background: linear-gradient(#504b45 0%, #3c3b37 100%);
+  padding: 0 8px;
+  height: 25px;
+  display: flex;
+  align-items: center;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+}
+
+.Toolbar__buttons {
+  display: flex;
+  align-items: center;
+}
+
+.Toolbar__button {
+  width: 12px;
+  height: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 100%;
+  margin-right: 4px;
+  font: 7px system-ui, sans-serif;
+  color: #000;
+  background: linear-gradient(#7d7871 0%, #595953 100%);
+  text-shadow: 0px 1px 0px rgba(255, 255, 255, 0.2);
+  box-shadow: 0px 0px 1px 0px #41403a, 0px 1px 1px 0px #474642;
+}
+
+.Toolbar__button--exit {
+  background: linear-gradient(#f37458 0%, #de4c12 100%);
+}
+
+.Toolbar__user {
+  color: #fff;
+  margin-left: 4px;
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 16px;
+}
+
+.Terminal__body {
+  display: flow-root; /* keeps the last child's margin inside the black area */
+  background: var(--terminal-bg);
+  margin-top: -1px;
+  padding-top: 2px;
+  font-family: var(--font-mono);
+}
+
+/* Prompt ---------------------------------------------------------------- */
+
+.Terminal__Prompt {
+  margin-top: 10px;
+  display: flex;
+}
+
+.Prompt__user {
+  color: var(--prompt-user);
+}
+
+.Prompt__location {
+  color: var(--prompt-location);
+}
+
+.Prompt__dollar {
+  color: var(--prompt-dollar);
+}
+
+.Prompt__cursor {
+  height: 17px;
+  width: 8px;
+  background: #fff;
+  display: block;
+  margin-left: 8px;
+  animation: 250ms ease infinite alternate blink;
+}
+
+@keyframes blink {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .Prompt__cursor {
+    animation: none;
+  }
+}
+
+/* Output: Markdown printed as terminal text ----------------------------- */
+
+.Terminal__output {
+  color: var(--accent);
+  /* A full 65-column line is a hair over 520px; when a list marker or a link
+     splits it into several text runs, rounding would wrap its last word. */
+  margin-right: -1px;
+}
+
+/* One blank line after the command, between blocks, and before the prompt. */
+.Terminal__Prompt + .Terminal__output {
+  padding-top: 1em;
+  padding-top: 1lh;
+}
+
+.Terminal__output > * + * {
+  margin-top: 1em;
+  margin-top: 1lh;
+}
+
+.Terminal__output + .Terminal__Prompt {
+  margin-top: calc(1em + 10px);
+  margin-top: calc(1lh + 10px);
+}
+
+.Terminal__output pre,
+.Terminal__output code {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+.Terminal__output pre {
+  overflow-x: auto;
+}
+
+/* Lists: "  • item". Markers are text, so wrapped lines restart at column 0. */
+.Terminal__output ul > li::before {
+  content: "  \2022  ";
+  white-space: pre;
+}
+
+.Terminal__output li ul > li::before {
+  content: "    - ";
+}
+
+.Terminal__output ol {
+  counter-reset: item;
+}
+
+.Terminal__output ol > li {
+  counter-increment: item;
+}
+
+.Terminal__output ol > li::before {
+  content: "  " counter(item) ". ";
+  white-space: pre;
+}
+
+.Terminal__output li > p:first-child {
+  display: inline;
+}
+
+/* Definition lists: "- Term" then "  - definition". */
+.Terminal__output dt::before {
+  content: "- ";
+}
+
+.Terminal__output dd::before {
+  content: "  - ";
+  white-space: pre;
+}
+
+.Terminal__output blockquote {
+  padding-left: 2ch;
+}
+
+.Terminal__output a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.Terminal__output a:hover,
+.Terminal__output strong,
+.Terminal__output :is(h1, h2, h3, h4, h5, h6) {
+  color: #fff;
+}
+
+.Terminal__output strong,
+.Terminal__output :is(h1, h2, h3, h4, h5, h6) {
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+.Terminal__output hr {
+  border: 0;
+  border-top: 1px dashed currentColor;
+}
+
+.Terminal__output img {
+  display: block;
+  margin: 15px auto 10px;
+  max-width: 100%;
+  height: auto;
+  border: 1.5px solid var(--accent);
+  border-radius: 5px;
+}

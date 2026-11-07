@@ -1,0 +1,11 @@
+{{- /*
+  Context: a map with "text" (HTML: words wrapped in <span> are white, the
+  rest uses the accent color) and an optional "url".
+*/ -}}
+{{- with . }}
+  {{- if .url -}}
+    <a class="logo" href="{{ .url }}">{{ .text | safeHTML }}</a>
+  {{- else -}}
+    <div class="logo">{{ .text | safeHTML }}</div>
+  {{- end }}
+{{- end -}}

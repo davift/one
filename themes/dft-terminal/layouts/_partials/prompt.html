@@ -1,0 +1,8 @@
+{{- /* Context: the command to echo. An empty command shows a blinking cursor. */ -}}
+{{- $t := site.Params.terminal | default dict -}}
+<div class="Terminal__Prompt">
+            <span class="Prompt__user">{{ $t.user | default "user@host" }}:</span><span class="Prompt__location">{{ $t.path | default "~" }}</span><span class="Prompt__dollar">$ {{ . }}</span>
+            {{- if not . }}
+            <span class="Prompt__cursor"></span>
+            {{- end }}
+          </div>

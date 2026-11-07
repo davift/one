@@ -1,0 +1,26 @@
+{{- /*
+  Renders a page as a terminal window (see terminal.html). Front matter:
+    toolbar  toolbar text (default: "<params.terminal.title> - <title>")
+    command  command echoed at the top
+    prompt   false to drop the closing prompt with the blinking cursor
+*/ -}}
+{{- $prefix := (site.Params.terminal | default dict).title | default site.Title }}
+{{- $title := .Params.toolbar }}
+{{- if not $title }}
+  {{- $title = $prefix }}
+  {{- if and .Title (not .IsHome) }}
+    {{- $title = printf "%s - %s" $prefix .Title }}
+  {{- end }}
+{{- end }}
+{{- $pages := slice }}
+{{- if not .IsPage }}
+  {{- $pages = .RegularPages }}
+{{- end }}
+{{- partial "terminal.html" (dict
+  "title" $title
+  "command" .Params.command
+  "content" .Content
+  "pages" $pages
+  "page" .
+  "prompt" (ne .Params.prompt false)
+) -}}

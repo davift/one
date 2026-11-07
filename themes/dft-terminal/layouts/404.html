@@ -1,0 +1,20 @@
+{{ define "main" }}
+  {{- $prefix := (site.Params.terminal | default dict).title | default site.Title }}
+  {{- $banner := `
+   _____  _______      _____
+  /  |  | \   _  \    /  |  |
+ /   |  |_/  /_\  \  /   |  |_
+/    ^   /\  \_/   \/    ^   /
+\____   |  \_____  /\____   |
+     |__|        \/      |__|` }}
+  {{- $output := printf `<pre>%s</pre>
+<p>dft: page not found</p>
+<p>Try '<a href="%s">dft --help</a>' for more information.</p>` $banner site.Home.Permalink }}
+    <section class="card" id="top">
+      {{ partial "terminal.html" (dict
+        "title" (printf "%s - 404" $prefix)
+        "content" ($output | safeHTML)
+        "prompt" true
+      ) }}
+    </section>
+{{ end }}

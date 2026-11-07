@@ -1,0 +1,10 @@
+<footer class="navbar">
+    {{ partial "logo.html" site.Params.handle }}
+    {{- with site.Menus.footer }}
+    <nav>
+      <ul class="nav-links menu">
+        {{- partial "menu.html" . }}
+      </ul>
+    </nav>
+    {{- end }}
+  </footer>

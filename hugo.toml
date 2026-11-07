@@ -1,0 +1,44 @@
+baseURL = 'https://dft.one/'
+locale = 'en'
+title = 'DFT'
+theme = 'dft-terminal'
+
+# A one-page site: no feeds or taxonomy pages.
+disableKinds = ['rss', 'taxonomy', 'term']
+
+# Terminals print plain ASCII: keep straight quotes, "--" and "..." as typed.
+[markup.goldmark.extensions.typographer]
+  disable = true
+
+[params.brand]
+  # Header, left. Words wrapped in <span> are white, the rest is orange.
+  text = '<span>info</span>@<span>DFT</span>.one'
+  # url = 'mailto:info@dft.one'
+
+[params.handle]
+  # Header, right, and footer, left.
+  text = '<span>LinkedIn/</span>daviftorres'
+  # url = 'https://www.linkedin.com/in/daviftorres/'
+
+[params.terminal]
+  title = 'DFT'          # Toolbar prefix: "DFT - About"
+  user = 'Secured@DFT'   # Prompt: Secured@DFT:~$
+  path = '~'
+
+[[menus.footer]]
+  name = 'Top'
+  url = '#top'
+  weight = 10
+
+# Header links go in menus.main, after the handle. Entries with a parent
+# become a dropdown under it:
+#
+# [[menus.main]]
+#   identifier = 'services'
+#   name = 'Services'
+#   url = '/'
+#   weight = 10
+# [[menus.main]]
+#   parent = 'services'
+#   name = 'Dropdown 1'
+#   url = '/'

@@ -1,0 +1,13 @@
+<header class="navbar">
+    {{ partial "logo.html" (site.Params.brand | default (dict "text" site.Title)) }}
+    {{- if or site.Params.handle site.Menus.main }}
+    <nav>
+      <ul class="nav-links menu">
+        {{- with site.Params.handle }}
+        <li>{{ partial "logo.html" . }}</li>
+        {{- end }}
+        {{- partial "menu.html" site.Menus.main }}
+      </ul>
+    </nav>
+    {{- end }}
+  </header>

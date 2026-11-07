@@ -1,0 +1,15 @@
+{{- /* Context: a menu. Renders its entries as <li>; children become a dropdown. */ -}}
+{{- range . }}
+  {{- if .HasChildren }}
+        <li class="has-dropdown">
+          <a href="{{ .URL }}">{{ .Name }}</a>
+          <ul class="dropdown">
+            {{- range .Children }}
+            <li><a href="{{ .URL }}">{{ .Name }}</a></li>
+            {{- end }}
+          </ul>
+        </li>
+  {{- else }}
+        <li><a href="{{ .URL }}">{{ .Name }}</a></li>
+  {{- end }}
+{{- end -}}
